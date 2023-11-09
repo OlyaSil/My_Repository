@@ -1,0 +1,66 @@
+field = [["-", "-", "-"],
+         ["-", "-", "-"],
+         ["-", "-", "-"]]
+
+def print_field(field):
+    for row in field:
+        print(" ".join(row))
+
+def check_winner(field):
+    for row in field:
+        if all(elem != "-" and elem == row[0] for elem in row):
+            return row[0]
+    for i in range(3):
+        column = [field[row][i] for row in range(3)]
+        if all(elem != "-" and elem == column[0] for elem in column):
+            return column[0]
+    diagonal1 = [field[i][i] for i in range(3)]
+    diagonal2 = [field[i][2 - i] for i in range(3)]
+    if all(elem != "-" and elem == diagonal1[0] for elem in diagonal1):
+        return diagonal1[0]
+    if all(elem != "-" and elem == diagonal2[0] for elem in diagonal2):
+        return diagonal2[0]
+    return None
+
+def get_valid_input(message):
+    while True:
+        user_input = input(message)
+        if user_input.isdigit():
+            return int(user_input)
+        else:
+            print("Вы ввели неверное значение. Пожалуйста, введите цифру.")
+
+def next_move():
+    while True:
+        row = get_valid_input("Введите ряд от 1 до 3: ") - 1
+        if row in range(0, 3):
+            break
+        else:
+            print("Вы ввели неверное значение")
+    while True:
+        column = get_valid_input("Введите колонку от 1 до 3: ") - 1
+        if column in range(0, 3):
+            break
+        else:
+            print("Вы ввели неверное значение")
+    while True:
+        sign = input("Введите 'X' или '0': ").upper()
+        if sign in ['X', '0']:
+            break
+        else:
+            print("Вы ввели неверный символ")
+    if field[row][column] == "X" or field[row][column] == "0":
+        print("Поле уже занято")
+        next_move()
+    else:
+        field[row][column] = sign
+    return field
+
+while True:
+    print_field(field)
+    next_move_result = next_move()
+    winner = check_winner(field)
+    if winner:
+        print_field(field)
+        print(f"Победа! Выигрывает игрок \"{winner}\"")
+        break
